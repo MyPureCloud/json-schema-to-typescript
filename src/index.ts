@@ -177,7 +177,8 @@ class Compiler {
         // right now we just pring [Object object] as the literal which is bad
         if(this.settings.useTypescriptEnums){
           var enumValues = zip(rule.tsEnumNames || [], 
-              rule.enum!.map(_ => new TsType.Literal(_).toType(this.settings)))
+              // If we try to create a literal from an object, bad stuff can happen... so we have to toString it
+              rule.enum!.map(_ => new TsType.Literal(_).toType(this.settings).toString()))
             .map(_ => new TsType.EnumValue(_));
 
           // name our anonymous enum, if it doesn't have an ID, by the property name under 
@@ -185,13 +186,25 @@ class Compiler {
           // identifiers as EnumOneTwoThree for enum: ["One", "Two", "Three"].  Ugly, but
           // practical.
           let path = rule.id || propName || ("Enum" + enumValues.map(_ => _.identifier).join(""));
-          let retVal: TsType.TsType = new TsType.Enum(enumValues);
+
+          let enm = new TsType.Enum(enumValues);
+          let retVal: TsType.TsType = enm;
 
           // don't add this to the declarations map if this is the top-level type (already declared)
           // or if it's a reference and we don't want to declare those.
-          if(!isTop && (!isReference || this.settings.declareReferenced)){
-            retVal = this.declareType(retVal, path, path);
+          if((!isReference || this.settings.declareReferenced)){
+            if(!isTop){ 
+              retVal = this.declareType(retVal, path, path);
+            } else {
+              retVal.id = path;
+            }
+
+            if(this.settings.addEnumUtils){
+              let utilPath = path + "Utils"
+              this.declareType(new TsType.EnumUtils(enm), utilPath, utilPath)
+            }
           }
+
           return retVal;
           
         } else {
