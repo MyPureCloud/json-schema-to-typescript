@@ -28,7 +28,7 @@ export namespace TsType {
     propertyDescription: true,
     useConstEnums: false,
     useFullReferencePathAsName: false,
-    useInterfaceDeclaration: true,
+    useInterfaceDeclaration: true
   }
 
   export abstract class TsTypeBase {
