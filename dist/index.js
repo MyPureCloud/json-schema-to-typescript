@@ -5,58 +5,10 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var TsTypes = require('./TsTypes');
-var EnumUtils = (function (_super) {
-    __extends(EnumUtils, _super);
-    function EnumUtils(enm) {
-        _super.call(this);
-        this.enm = enm;
-    }
-    EnumUtils.prototype.isSimpleType = function () { return false; };
-    EnumUtils.prototype._type = function (settings) {
-        // It's a bit hacky, but if this is a top level type, then addDeclaration changes 
-        // our enum type's ID out from under us when it adds the enum to the declaration map, *after*
-        // the util class is declared.  So we name ourselves by our enum's type, not our own ID'
-        return this.enm.toSafeType(settings) + "Util" || this.safeId() || 'SomeEnumTypeUtils';
-    };
-    EnumUtils.prototype.toSafeType = function (settings) {
-        return "" + this.toType(settings);
-    };
-    EnumUtils.prototype.toDeclaration = function (settings) {
-        return this.toBlockComment(settings) + "export class " + this._type(settings) + " {\n      " + this.makeValuesMethod(settings) + "\n      " + this.makeToStringValueMethod(settings) + "\n      " + this.makeFromStringValueMethod(settings) + "\n      " + this.makeFromStringValuesMethod(settings) + "\n    }";
-    };
-    EnumUtils.prototype.makeValuesMethod = function (settings) {
-        var enumType = this.enm.toSafeType(settings);
-        return "static values(): " + enumType + "[] {\n    return [" + this.enm.enumValues.map(function (_) { return (enumType + "." + _.identifier); }).join(',') + "]\n  }";
-    };
-    EnumUtils.prototype.makeFromStringValueMethod = function (settings) {
-        var enumType = this.enm.toSafeType(settings);
-        return "static fromStringValue(value: string): " + enumType + " {\n    switch(value.toLowerCase()){\n      " + this.enm.enumValues.map(function (_) { return ("case \"" + _.identifier.toLowerCase() + "\":\n        return " + (enumType + '.' + _.identifier) + ";"); }).join('\n') + "\n      default:\n        throw new Error(\"Unrecognized " + enumType + ": \" + value);\n    }\n  }";
-    };
-    EnumUtils.prototype.makeToStringValueMethod = function (settings) {
-        var enumType = this.enm.toSafeType(settings);
-        return "static toStringValue(enm: " + enumType + "): string {\n    switch(enm){\n      " + this.enm.enumValues.map(function (_) { return ("case " + (enumType + '.' + _.identifier) + ":\n        return \"" + _.identifier.toLowerCase() + "\";"); }).join('\n') + "\n    }\n  }";
-    };
-    EnumUtils.prototype.makeFromStringValuesMethod = function (settings) {
-        var enumType = this.enm.toSafeType(settings);
-        return "static fromStringValues(values: string[]): " + enumType + "[] {\n    return _.map(values, value => " + this._type(settings) + ".fromStringValue(value));\n  }";
-    };
-    return EnumUtils;
-}(TsTypes.TsType.TsTypeBase));
-exports.EnumUtils = EnumUtils;
-
-},{"./TsTypes":2}],2:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var lodash_1 = require('lodash');
 var TsType;
 (function (TsType) {
     TsType.DEFAULT_SETTINGS = {
-        addEnumUtils: false,
         declarationDescription: true,
         // declareProperties: false,
         declareReferenced: true,
@@ -298,9 +250,8 @@ var TsType;
     TsType.Interface = Interface;
 })(TsType = exports.TsType || (exports.TsType = {}));
 
-},{"lodash":undefined}],3:[function(require,module,exports){
+},{"lodash":undefined}],2:[function(require,module,exports){
 "use strict";
-var EnumUtils_1 = require('./EnumUtils');
 var pretty_printer_1 = require('./pretty-printer');
 var TsTypes_1 = require('./TsTypes');
 var fs_1 = require('fs');
@@ -494,10 +445,6 @@ var Compiler = (function () {
                             else {
                                 retVal.id = path;
                             }
-                            if (this.settings.addEnumUtils) {
-                                var utilPath = path + 'Utils';
-                                this.declareType(new EnumUtils_1.EnumUtils(enm), utilPath, utilPath);
-                            }
                         }
                         return retVal;
                     case EnumType.String:
@@ -631,7 +578,7 @@ function compileFromFile(inputFilename) {
 }
 exports.compileFromFile = compileFromFile;
 
-},{"./EnumUtils":1,"./TsTypes":2,"./pretty-printer":4,"fs":undefined,"lodash":undefined,"path":undefined}],4:[function(require,module,exports){
+},{"./TsTypes":1,"./pretty-printer":3,"fs":undefined,"lodash":undefined,"path":undefined}],3:[function(require,module,exports){
 // from https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#pretty-printer-using-the-ls-formatter
 "use strict";
 var ts = require('typescript');
@@ -683,5 +630,5 @@ function format(text) {
 }
 exports.format = format;
 
-},{"typescript":undefined}]},{},[3])(3)
+},{"typescript":undefined}]},{},[2])(2)
 });
