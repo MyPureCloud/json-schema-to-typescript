@@ -61,7 +61,6 @@ export namespace TsType {
         declarationDescription?: boolean;
         declareReferenced?: boolean;
         declareSimpleType?: boolean;
-        exportInterfaces?: boolean;
         endPropertyWithSemicolon?: boolean;
         endTypeWithSemicolon?: boolean;
         propertyDescription?: boolean;

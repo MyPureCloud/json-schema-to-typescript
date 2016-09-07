@@ -66,7 +66,7 @@ var TsType;
         propertyDescription: true,
         useConstEnums: false,
         useFullReferencePathAsName: false,
-        useInterfaceDeclaration: true,
+        useInterfaceDeclaration: true
     };
     var TsTypeBase = (function () {
         function TsTypeBase() {
@@ -403,7 +403,16 @@ var Compiler = (function () {
         if (refPath[0] !== '#') {
             var id = void 0;
             var fullPath = path_1.resolve(path_1.join(this.filePath.dir, refPath));
-            var file = fs_1.readFileSync(fullPath);
+            var file = void 0;
+            if (fullPath.startsWith('http')) {
+                throw new ReferenceError('Remote http references are not yet supported.  Could not read ' + fullPath);
+            }
+            try {
+                file = fs_1.readFileSync(fullPath);
+            }
+            catch (err) {
+                throw new ReferenceError('Unable to find referenced file ' + fullPath);
+            }
             var targetType = this.toTsType(JSON.parse(file.toString()), propName, false, true);
             if (targetType.id) {
                 id = targetType.toSafeType(this.settings);
@@ -537,16 +546,16 @@ var Compiler = (function () {
                 throw TypeError('Enum was declared as an integer type, but found at least one non-integer member');
             }
             if (!rule.tsEnumNames) {
-                throw TypeError('Property tsEnumValues is required when enum is declared as an integer type');
+                throw TypeError('Property tsEnumNames is required when enum is declared as an integer type');
             }
             if (rule.tsEnumNames.length !== rule.enum.length) {
-                throw TypeError('Property enum and property tsEnumValues must be the same length');
+                throw TypeError('Property enum and property tsEnumNames must be the same length');
             }
             throw TypeError('Enum was declared as an integer type, but found at least one non-string tsEnumValue');
         }
         // I don't think we should ever hit this case.
         if (!isActuallyStringEnum && !isIntegerEnumWithValidStringValues) {
-            throw TypeError('Enum members must be a list of strings or a list of integers (with corresponding tsEnumValues)');
+            throw TypeError('Enum members must be a list of strings or a list of integers (with corresponding tsEnumNames)');
         }
         if (isIntegerEnumWithValidStringValues) {
             return EnumType.Integer;
