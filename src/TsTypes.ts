@@ -3,6 +3,7 @@ import { camelCase, upperFirst } from 'lodash'
 export namespace TsType {
 
   export interface TsTypeSettings {
+    addEnumUtils?: boolean
     declarationDescription?: boolean
     // TODO declareProperties?: boolean
     declareReferenced?: boolean
@@ -17,6 +18,7 @@ export namespace TsType {
   }
 
   export var DEFAULT_SETTINGS: TsTypeSettings = {
+    addEnumUtils: false,
     declarationDescription: true,
     // declareProperties: false,
     declareReferenced: true,
@@ -26,7 +28,7 @@ export namespace TsType {
     propertyDescription: true,
     useConstEnums: false,
     useFullReferencePathAsName: false,
-    useInterfaceDeclaration: true
+    useInterfaceDeclaration: true,
   }
 
   export abstract class TsTypeBase {
