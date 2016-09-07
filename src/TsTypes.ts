@@ -8,7 +8,6 @@ export namespace TsType {
     // TODO declareProperties?: boolean
     declareReferenced?: boolean
     declareSimpleType?: boolean
-    exportInterfaces?: boolean
     endPropertyWithSemicolon?: boolean
     endTypeWithSemicolon?: boolean
     propertyDescription?: boolean
