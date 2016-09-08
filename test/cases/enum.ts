@@ -46,7 +46,8 @@ export interface Enum {
   },
     {
     settings: {
-      addEnumUtils: true
+      addEnumUtils: true,
+      useConstEnums: false
     },
     types: `export enum Bar {
   One = 1,
