@@ -4,7 +4,7 @@ export function compile(schema: JSONSchema.Schema, path: string | undefined, set
 export function compileFromFile(inputFilename: string): Promise<string | Error>;
 
 export namespace JSONSchema {
-    type SimpleTypes = "array" | "boolean" | "integer" | "null" | "number" | "object" | "string";
+    type SimpleTypes = 'array' | 'boolean' | 'integer' | 'null' | 'number' | 'object' | 'string';
     /** Core schema meta-schema */
     type HttpJsonSchemaOrgDraft04Schema = {
         id?: string;
