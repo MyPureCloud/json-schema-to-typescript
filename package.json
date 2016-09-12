@@ -49,5 +49,8 @@
     "mocha": "^2.5.3",
     "tslint": "^3.15.1",
     "watch": "^0.17.1"
+  },
+  "publishConfig": {
+    "registry": "https://purecloud.artifactoryonline.com/purecloud/api/npm/inin-internal-npm-dev/"  
   }
 }
