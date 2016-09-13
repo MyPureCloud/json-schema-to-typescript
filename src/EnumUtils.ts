@@ -25,7 +25,7 @@ export class EnumUtils extends TsTypes.TsType.TsTypeBase {
   makeValuesMethod(settings: TsTypes.TsType.TsTypeSettings){
     let enumType = this.enm.toSafeType(settings)
     return `static values(): ${enumType}[] {
-    return [${this.enm.enumValues.map(_ => `${enumType}.${_.identifier}`).join(',')}]
+    return [${this.enm.enumValues.map(_ => `${enumType}.${_.identifier}`).join(',')}];
   }`
   }
   makeFromStringValueMethod(settings: TsTypes.TsType.TsTypeSettings){
