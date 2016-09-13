@@ -56,7 +56,7 @@ export interface Enum {
 }
 export class BarUtil {
   static values(): Bar[] {
-    return [Bar.One, Bar.Two, Bar.Three]
+    return [Bar.One, Bar.Two, Bar.Three];
   }
   static toStringValue(enm: Bar): string {
     switch (enm) {
